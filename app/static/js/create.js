@@ -16,7 +16,12 @@ submitButton.addEventListener('click', () => {
 
     fetch('/create', {
         method: 'POST',
+        redirect: 'follow',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
-    }).then(response => console.log(response.ok))
+    }).then(response => {
+        if (response.redirected) {
+            window.location.href = response.url
+        }
+    })
 })
