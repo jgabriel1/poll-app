@@ -1,7 +1,28 @@
 {% extends 'base.html' %}
 {% block title %}Create{% endblock %}
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/create.css') }}">
+{% endblock %}
 {% block content %}
-    <h1>
-        Create your new poll here!
-    </h1>
+<form action="#">
+    {{ create_form.csrf_token }}
+    <div class="form-group" id="create-poll-query">
+        {{ create_form.query.label }}
+        {{ create_form.query }}
+    </div>
+    <ol id="option-list">
+        {% for option in create_form.options %}
+        <li class="form-group">
+            {{ option }}
+        </li>
+        {% endfor %}
+    </ol>
+    <button type="button" class="btn btn-primary">More</button>
+    <div class="form-check">
+        {{ create_form.multiple_answers }}
+        {{ create_form.multiple_answers.label }}
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
 {% endblock %}

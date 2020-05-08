@@ -9,7 +9,6 @@ class Poll(db.Model):
     __tablename__ = 'polls'
 
     id = db.Column(db.String, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
     query = db.Column(db.String(1000), nullable=False)
     date_created = db.Column(db.DateTime)
     date_due = db.Column(db.DateTime)
