@@ -4,24 +4,24 @@ from wtforms.validators import Required
 
 
 class CreateForm(FlaskForm):
-    query = TextField(
+    question = TextField(
         label='Question: ',
         id='poll-question',
         validators=[Required()],
         render_kw={'class_': 'form-control'}
     )
 
+    allow_multiple = BooleanField(
+        label='Allow more than one answer.',
+        id='allow-multiple',
+        render_kw={'class_': 'form-check-input'}
+    )
+
     options = FieldList(
-        min_entries=3,
+        min_entries=2,
         unbound_field=TextField(
             render_kw={'class_': 'form-control poll-option'}
         ),
-    )
-
-    multiple_answers = BooleanField(
-        label='Allow more than one answer.',
-        id='allow-multiple-checkbox',
-        render_kw={'class_': 'form-check-input'}
     )
 
 

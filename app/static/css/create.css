@@ -5,3 +5,8 @@
 #option-list {
     padding-left: 20px;
 }
+
+#buttons-group {
+    display: flex;
+    justify-content: space-between;
+}

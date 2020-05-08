@@ -5,11 +5,15 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/create.css') }}">
 {% endblock %}
 {% block content %}
-<form action="#">
+<form action="#" id="poll-form">
     {{ create_form.csrf_token }}
     <div class="form-group" id="create-poll-query">
-        {{ create_form.query.label }}
-        {{ create_form.query }}
+        {{ create_form.question.label }}
+        {{ create_form.question }}
+    </div>
+    <div class="form-check">
+        {{ create_form.allow_multiple }}
+        {{ create_form.allow_multiple.label }}
     </div>
     <ol id="option-list">
         {% for option in create_form.options %}
@@ -18,11 +22,13 @@
         </li>
         {% endfor %}
     </ol>
-    <button type="button" class="btn btn-primary">More</button>
-    <div class="form-check">
-        {{ create_form.multiple_answers }}
-        {{ create_form.multiple_answers.label }}
+    <div id="buttons-group">
+        <button type="button" class="btn btn-primary">More</button>
+        <button type="button" class="btn btn-primary" id="submit-poll-form">Submit</button>
     </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
 </form>
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+<script src="{{ url_for('static', filename='js/create.js') }}"></script>
 {% endblock %}

@@ -9,11 +9,11 @@ class Poll(db.Model):
     __tablename__ = 'polls'
 
     id = db.Column(db.String, primary_key=True)
-    query = db.Column(db.String(1000), nullable=False)
+    question = db.Column(db.String(1000), nullable=False)
+    allow_multiple = db.Column(db.Boolean, nullable=True, default=True)
+    options = db.relationship('Option', backref='polls')
     date_created = db.Column(db.DateTime)
     date_due = db.Column(db.DateTime)
-    select_multiple = db.Column(db.Boolean, nullable=True, default=True)
-    options = db.relationship('Option', backref='polls')
 
 
 class Option(db.Model):
