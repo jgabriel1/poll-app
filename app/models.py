@@ -1,7 +1,8 @@
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
-from marshmallow import pre_load
+from marshmallow import pre_load, post_dump
 from secrets import token_hex, token_urlsafe
+from typing import List
 
 db = SQLAlchemy()
 ma = Marshmallow()
@@ -28,7 +29,6 @@ class Option(db.Model):
 class PollSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Poll
-        include_relationships = True
         load_instance = True
 
     @pre_load
@@ -44,7 +44,12 @@ class OptionSchema(ma.SQLAlchemyAutoSchema):
         include_fk = True
         load_instance = True
 
-    def load_id(self, data, poll_id, session):
+    def load_id(self, data: List[dict], poll_id: str, session) -> List[Option]:
+        """
+        Creates the correct JSON format to be deserialized by the load
+        function. Also helps with adding the poll_id value that is sent
+        from the request.
+        """
         return self.load(
             [
                 {
@@ -57,6 +62,19 @@ class OptionSchema(ma.SQLAlchemyAutoSchema):
             ],
             session=session
         )
+
+    def dump_clean(self, data: List[Option]) -> List[dict]:
+        """
+        Removes id and poll_id from the serialized object to clean
+        unnecessary information in the data being sent through json.
+        """
+        options = self.dump(data)
+
+        for option in options:
+            option.pop('id')
+            option.pop('poll_id')
+
+        return options
 
 
 poll_schema = PollSchema()

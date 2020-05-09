@@ -1,7 +1,24 @@
 {% extends 'base.html' %}
-{% block title %}{{ poll.name }}{% endblock %}
+{% block title %}Vote{% endblock %}
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/vote.css') }}">
+{% endblock %}
 {% block content %}
-<h1>
-    Vote here!
-</h1>
+<form id="vote-form">
+    <p id="poll-question">{{ poll.question }}</p>
+    <ul id="option-list">
+        {% for option in poll.options %}
+        {% set input_id = 'option-%d' | format(loop.index) %}
+        <li class="form-check option">
+            {% if poll.allow_multiple %}
+            <input type="checkbox" class="form-check-input option-vote" id="{{ input_id }}">
+            {% else %}
+            <input type="radio" name="chosen" class="form-check-input option-vote" id="{{ input_id }}">
+            {% endif %}
+            {{ option.text }}
+        </li>
+        {% endfor %}
+    </ul>
+</form>
 {% endblock %}

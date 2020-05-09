@@ -1,4 +1,22 @@
+const moreButton = document.querySelector('#add-option')
 const submitButton = document.querySelector('#submit-poll-form')
+
+moreButton.addEventListener('click', () => {
+    const optionList = document.querySelector('#option-list')
+    const optionContainer = optionList.querySelector('.option-container')
+    const clone = optionContainer.cloneNode(true)
+
+    const changeInChild = (attribute, count) => {
+        let child = clone.querySelector('input')
+        let value = child.getAttribute(attribute).replace('0', count)
+        child.setAttribute(attribute, value)
+    }
+
+    changeInChild('id', optionList.childElementCount)
+    changeInChild('name', optionList.childElementCount)
+
+    optionList.appendChild(clone)
+})
 
 submitButton.addEventListener('click', () => {
     const question = document.querySelector('#poll-question')
