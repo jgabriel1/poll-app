@@ -9,16 +9,17 @@
     <p id="poll-question">{{ poll.question }}</p>
     <ul id="option-list">
         {% for option in poll.options %}
-        {% set input_id = 'option-%d' | format(loop.index) %}
-        <li class="form-check option">
-            {% if poll.allow_multiple %}
-            <input type="checkbox" class="form-check-input option-vote" id="{{ input_id }}">
-            {% else %}
-            <input type="radio" name="chosen" class="form-check-input option-vote" id="{{ input_id }}">
-            {% endif %}
-            {{ option.text }}
+        {% set input_type = 'checkbox' if poll.allow_multiple else 'radio' %}
+        <li class="custom-control option">
+            <input type="{{ input_type }}" name="chosen" class="custom-control-input option-vote" id="{{ option.id }}">
+            <label class="custom-control-label" for="{{ option.id }}">{{ option.text }}</label>
         </li>
         {% endfor %}
     </ul>
+    <button type="button" id="submit-votes" class="btn btn-primary">Submit</button>
 </form>
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+<script src="{{ url_for('static', filename='js/vote.js') }}"></script>
 {% endblock %}

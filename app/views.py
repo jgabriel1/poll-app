@@ -36,19 +36,46 @@ def create():
     return render_template('create.html', create_form=create_form)
 
 
-@view.route('/vote/<id>', methods=['GET', 'POST'])
+@view.route('/vote/<id>', methods=['GET', 'PUT'])
 def vote_poll(id: str):
+    if request.method == 'PUT':
+        json_response = request.get_json()
+        option_ids = json_response.get('ids')
+        results = json_response.get('results')
+
+        for option_id, voted in zip(option_ids, results):
+            if voted:
+                option = Option.query.filter_by(id=option_id).first()
+                option.votes = Option.votes + 1
+                db.session.commit()
+
+        return redirect(f'/result/{id}')
+
     # o6r_IQ
     poll = poll_schema.dump(
         Poll.query.filter_by(id=id).first_or_404()
     )
 
-    options = options_schema.dump_clean(
-        Option.query.filter_by(poll_id=poll.get('id')).all(),
+    options = options_schema.dump(
+        Option.query.filter_by(poll_id=id).all(),
     )
 
     poll.update({'options': options})
     return render_template('vote.html', poll=poll)
 
-    # to add 1 to the counter on submit:
-    # https://stackoverflow.com/questions/2334824/how-to-increase-a-counter-in-sqlalchemy
+
+@view.route('/result/<id>', methods=['GET', 'PUT'])
+def poll_result(id: str):
+    """
+    Repeated code, refactor!!
+    """
+    poll = poll_schema.dump(
+        Poll.query.filter_by(id=id).first_or_404()
+    )
+
+    options = options_schema.dump(
+        Option.query.filter_by(poll_id=id).all(),
+    )
+
+    poll.update({'options': options})
+    return render_template('result.html', poll=poll)
