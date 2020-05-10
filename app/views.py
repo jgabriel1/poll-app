@@ -13,7 +13,7 @@ def index():
 
 
 @view.route('/create', methods=['GET', 'POST'])
-def create():
+def create_poll():
     if request.method == 'POST':
         poll = request.get_json()
         options = poll.pop('options')

@@ -4,7 +4,7 @@ from wtforms.validators import Required
 
 
 class CreateForm(FlaskForm):
-    question = TextField(
+    question = StringField(
         label='Question: ',
         id='poll-question',
         validators=[Required()],
@@ -19,7 +19,7 @@ class CreateForm(FlaskForm):
 
     options = FieldList(
         min_entries=2,
-        unbound_field=TextField(
+        unbound_field=StringField(
             render_kw={'class_': 'form-control poll-option'}
         ),
     )

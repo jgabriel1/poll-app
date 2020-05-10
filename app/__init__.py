@@ -1,9 +1,10 @@
 from flask import Flask
 from .views import *
 from .models import *
+from config import Config
 
 
-def create_app(config: object):
+def create_app(config: Config) -> Flask:
     app = Flask(__name__)
     app.app_context().push()
 
