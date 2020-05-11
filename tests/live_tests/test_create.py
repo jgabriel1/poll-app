@@ -1,6 +1,6 @@
-import re
-from time import sleep
-from tests.live_tests.setup import BaseLiveTest, PollTest
+import time
+from tests.setup import PollTest
+from tests.live_tests.setup import BaseLiveTest
 from app.models import db, Poll
 
 
@@ -10,7 +10,7 @@ class LiveTestCreate(BaseLiveTest):
         poll_test = PollTest()
         self.driver.get(f'{poll_test.url}/create')
 
-        question, allow_multiple, options, add_button = self.find_create_nodes()
+        question, allow_multiple, options, add_button = self.find_elements_create()
 
         button_presses = 0
         while len(options) < len(poll_test.options):
@@ -38,12 +38,11 @@ class LiveTestCreate(BaseLiveTest):
 
         submit = self.driver.find_element_by_id('submit-poll-form')
         submit.click()
-        sleep(3)
+        time.sleep(2)
 
         url = self.driver.current_url
         with self.subTest('test-redirecting-to-vote'):
-            regex = re.compile(r'^(http:\/\/localhost:8943\/vote\/).{6}$')
-            self.assertRegex(url, regex)
+            self.assertRegex(url, r'^(http:\/\/localhost:8943\/vote\/).{6}$')
 
         # Check database directly:
         poll_id = url.split('/')[-1]

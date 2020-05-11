@@ -1,48 +1,25 @@
-from time import sleep
+import time
 from typing import Tuple, List
-from flask_testing import TestCase
 from selenium import webdriver
 from selenium.webdriver.remote.webelement import WebElement as Element
-
-from app import create_app
-from app.models import db, Poll, Option
-from config import TestingConfig
+from tests.setup import BaseTest, PollTest
 
 
-class PollTest:
-    url = 'http://localhost:8943'
-    question = 'This is a test question.'
-    options = [
-        'Test answer 1',
-        'Test answer 2',
-        'Test answer 3',
-        'Test answer 4',
-        'Test answer 5',
-    ]
-
-
-class BaseLiveTest(TestCase):
-
-    def create_app(self):
-        config = TestingConfig()
-        return create_app(config=config)
+class BaseLiveTest(BaseTest):
 
     def setUp(self):
-        """Before every test."""
-        db.create_all()
+        super().setUp()
 
         options = webdriver.firefox.options.Options()
         options.set_headless()
         self.driver = webdriver.Firefox(options=options)
 
     def tearDown(self):
-        """After every test."""
         self.driver.quit()
 
-        db.session.remove()
-        db.drop_all()
+        super().tearDown()
 
-    def find_create_nodes(self) -> Tuple[Element, Element, List[Element], Element]:
+    def find_elements_create(self) -> Tuple[Element, Element, List[Element], Element]:
         """
         Finds elements in the '/create' page, in order:
             1. Poll question input;
@@ -52,28 +29,35 @@ class BaseLiveTest(TestCase):
         """
         return (
             self.driver.find_element_by_id('poll-question'),
-            self.driver.find_element_by_id('allow-multiple'),
+            self.driver.find_element_by_xpath(
+                """//label[@for="allow-multiple"]"""
+            ),
             self.driver.find_elements_by_class_name('poll-option'),
             self.driver.find_element_by_id('add-option')
         )
 
-    def create_poll(self):
+    def create_poll(self, multiple_answers=False) -> str:
         poll_test = PollTest()
         self.driver.get(f'{poll_test.url}/create')
 
-        question, allow_multiple, options, add_button = self.find_create_nodes()
+        question, allow_multiple, options, add_button = self.find_elements_create()
         submit_button = self.driver.find_element_by_id('submit-poll-form')
 
+        # Get the correct amount of needed option spaces:
         while len(options) < len(poll_test.options):
             add_button.click()
             options = self.driver.find_elements_by_class_name('poll-option')
 
+        # Type values in:
         question.send_keys(poll_test.question)
         for _input, value in zip(options, poll_test.options):
             _input.send_keys(value)
 
+        if multiple_answers:
+            allow_multiple.click()
+
         submit_button.click()
-        sleep(3)
+        time.sleep(2)
 
         poll_id = self.driver.current_url.split('/')[-1]
         return poll_id
