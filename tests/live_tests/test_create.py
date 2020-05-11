@@ -1,9 +1,10 @@
 import re
 from time import sleep
-from tests.setup import BaseLiveTest, PollTest
+from tests.live_tests.setup import BaseLiveTest, PollTest
+from app.models import db, Poll
 
 
-class LiveTest(BaseLiveTest):
+class LiveTestCreate(BaseLiveTest):
 
     def test_create_poll(self):
         poll_test = PollTest()
@@ -18,8 +19,8 @@ class LiveTest(BaseLiveTest):
             options = self.driver.find_elements_by_class_name('poll-option')
 
         with self.subTest('test_adding_options'):
-            self.assertEqual(button_presses, len(poll_test.options) - 2)
             self.assertEqual(len(options), len(poll_test.options))
+            self.assertEqual(button_presses, len(poll_test.options) - 2)
 
         question.send_keys(poll_test.question)
 
@@ -39,9 +40,23 @@ class LiveTest(BaseLiveTest):
         submit.click()
         sleep(3)
 
-        with self.subTest('test-redirected'):
-            url = self.driver.current_url
-            regex = re.compile(r'^http:\/\/localhost:8943\/vote\/\w{6}$')
+        url = self.driver.current_url
+        with self.subTest('test-redirecting-to-vote'):
+            regex = re.compile(r'^(http:\/\/localhost:8943\/vote\/).{6}$')
             self.assertRegex(url, regex)
+
+        # Check database directly:
+        poll_id = url.split('/')[-1]
+        poll_db = Poll.query.filter_by(id=poll_id).first()
+        options_db = poll_db.options
+
+        with self.subTest('test-created-in-database'):
+            self.assertTrue(poll_db)
+            self.assertTrue(options_db)
+
+            self.assertEqual(poll_db.question, poll_test.question)
+            for created, intended in zip(poll_db.options, poll_test.options):
+                self.assertEqual(created.text, intended)
+                self.assertEqual(created.poll_id, poll_id)
 
         self.driver.close()
