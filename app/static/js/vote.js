@@ -4,7 +4,7 @@ submitVotes.addEventListener('click', () => {
     const checkboxes = document.querySelectorAll('.option-vote')
     const results = {
         'ids': Array.from(checkboxes, checkbox => checkbox.id),
-        'results': Array.from(checkboxes, checkbox => checkbox.checked)
+        'votes': Array.from(checkboxes, checkbox => checkbox.checked)
     }
 
     const currentURL = window.location.href

@@ -2,7 +2,7 @@ from secrets import token_urlsafe
 from flask import Blueprint, request, redirect
 from sqlalchemy.exc import IntegrityError
 from app.models import db, Poll, Option
-from .schemas import CreatePollSchema
+from .schemas import CreatePollSchema, VotePollSchema
 
 api = Blueprint('api', __name__)
 
@@ -26,11 +26,10 @@ def submit_create_poll():
 
 @api.route('/vote/<id>', methods=['PUT'])
 def submit_vote_poll(id: str):
-    json_response = request.get_json()
-    option_ids = json_response.get('ids')
-    results = json_response.get('results')
+    schema = VotePollSchema()
+    ids, votes = schema.load(request.get_json())
 
-    for option_id, voted in zip(option_ids, results):
+    for option_id, voted in zip(ids, votes):
         if voted:
             option = Option.query.filter_by(id=option_id).first()
             option.votes = Option.votes + 1

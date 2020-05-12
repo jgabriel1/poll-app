@@ -9,7 +9,7 @@ class CreatePollSchema(Schema):
     options = fields.List(fields.String())
 
     @post_load
-    def create_models(self, item, many, **kwargs):
+    def create_models(self, item, **kwargs):
         poll = Poll(**{
             'id': token_urlsafe(4),
             'question': item['question'],
@@ -30,4 +30,9 @@ class CreatePollSchema(Schema):
 
 
 class VotePollSchema(Schema):
-    pass
+    ids = fields.List(fields.String())
+    votes = fields.List(fields.Boolean())
+
+    @post_load
+    def create_lists(self, item, **kwargs):
+        return item['ids'], item['votes']
