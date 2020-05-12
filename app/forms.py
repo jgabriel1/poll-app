@@ -23,9 +23,3 @@ class CreateForm(FlaskForm):
             render_kw={'class_': 'form-control poll-option'}
         ),
     )
-
-
-class PollForm(FlaskForm):
-    @classmethod
-    def from_dict(cls, poll: dict):
-        return cls()

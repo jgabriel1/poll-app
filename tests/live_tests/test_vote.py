@@ -89,6 +89,8 @@ class LiveTestVote(BaseLiveTest):
         total_votes = sum(int(result.text) for result in results)
         self.assertGreater(total_votes, 1)
 
+        self.driver.close()
+
     def test_not_allow_multiple(self):
         # In results page:
         self.click_all_labels(False)
@@ -96,3 +98,5 @@ class LiveTestVote(BaseLiveTest):
 
         total_votes = sum(int(result.text) for result in results)
         self.assertEqual(total_votes, 1)
+
+        self.driver.close()

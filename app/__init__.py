@@ -1,5 +1,6 @@
 from flask import Flask
 from .views import *
+from .api import *
 from .models import *
 from config import Config
 
@@ -13,9 +14,8 @@ def create_app(config: Config) -> Flask:
 
     # Bind app to external libraries:
     db.init_app(app)
-    ma.init_app(app)
-
     db.create_all()
 
     app.register_blueprint(view)
+    app.register_blueprint(api)
     return app
