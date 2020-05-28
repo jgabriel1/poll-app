@@ -6,7 +6,8 @@ authors = ["jgabriel1 <josegabriel@det.ufc.br>"]
 
 [tool.poetry.dependencies]
 python = "^3.7"
-flask = "^1.1.2"
+fastapi = "^0.55.1"
+uvicorn = "^0.11.5"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
