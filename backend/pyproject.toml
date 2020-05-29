@@ -8,7 +8,7 @@ authors = ["jgabriel1 <josegabriel@det.ufc.br>"]
 python = "^3.7"
 fastapi = "^0.55.1"
 uvicorn = "^0.11.5"
-pymongo = "^3.10.1"
+pymongo = {extras = ["tls"], version = "^3.10.1"}
 dnspython = "^1.16.0"
 
 [tool.poetry.dev-dependencies]
