@@ -14,5 +14,9 @@ class Poll(BaseModel):
     allow_multiple: bool
 
 
+class PollInDB(Poll):
+    url: str = None
+
+
 class Votes(BaseModel):
     voted: List[bool]
