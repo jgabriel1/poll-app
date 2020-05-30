@@ -1,7 +1,9 @@
-from fastapi import APIRouter, Depends, Response
+from fastapi import APIRouter, Depends, Response, HTTPException
 from pydantic import create_model
 from pymongo.database import Database
-from starlette.status import HTTP_201_CREATED, HTTP_204_NO_CONTENT
+from starlette.status import (
+    HTTP_201_CREATED, HTTP_204_NO_CONTENT, HTTP_404_NOT_FOUND
+)
 
 from ..crud import crud_polls
 from ..database.setup import get_db
@@ -23,6 +25,12 @@ def new_poll(poll: Poll, database: Database = Depends(get_db)):
 @router.get('/poll/{poll_url}', response_model=Poll)
 def fetch_poll(poll_url: str, database: Database = Depends(get_db)):
     poll = crud_polls.find_by_url(database, poll_url)
+
+    if not poll:
+        raise HTTPException(
+            status_code=HTTP_404_NOT_FOUND, detail="This poll does not exist."
+        )
+
     return poll
 
 
