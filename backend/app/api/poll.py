@@ -1,13 +1,14 @@
-from fastapi import APIRouter, Depends, Response, HTTPException
-from pydantic import create_model
+from fastapi import APIRouter, Depends, HTTPException, Response
 from pymongo.database import Database
 from starlette.status import (
-    HTTP_201_CREATED, HTTP_204_NO_CONTENT, HTTP_404_NOT_FOUND
+    HTTP_201_CREATED,
+    HTTP_204_NO_CONTENT,
+    HTTP_404_NOT_FOUND
 )
 
 from ..crud import crud_polls
 from ..database.setup import get_db
-from ..models import Poll
+from ..models import Poll, PollUrlPayload
 
 router = APIRouter()
 
@@ -15,7 +16,7 @@ router = APIRouter()
 @router.post(
     '/poll',
     status_code=HTTP_201_CREATED,
-    response_model=create_model('PollUrl', url=(str, ...))
+    response_model=PollUrlPayload
 )
 def new_poll(poll: Poll, database: Database = Depends(get_db)):
     poll_url = crud_polls.create(database, poll)

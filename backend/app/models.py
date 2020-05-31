@@ -18,5 +18,9 @@ class PollInDB(Poll):
     url: str = None
 
 
+class PollUrlPayload(BaseModel):
+    url: str
+
+
 class Votes(BaseModel):
     voted: List[bool]
