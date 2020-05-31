@@ -1,17 +1,15 @@
 import React from 'react'
 
-function Checkbox({ index, optionText, voted, handleSelection }) {
+function Checkbox({ index, voteHandler, optionText, isVoted }) {
     return (
-        <div className='checkboxContainer'>
+        <div className='checkboxContainer' key={index}>
             <input
                 type='checkbox'
                 id={`option${index}`}
-                checked={voted}
-                onChange={event => handleSelection(event)}
+                checked={isVoted}
+                onChange={event => voteHandler(event, index)}
             />
-            <label htmlFor={`option${index}`}>
-                {optionText}
-            </label>
+            <label htmlFor={`option${index}`}>{optionText}</label>
         </div>
     )
 }
