@@ -1,14 +1,13 @@
 import React from 'react'
 
-import CheckboxList from './components/CheckboxList'
+import Routes from './routes'
 
-const App = () => {
-	return (
-		<div className='App'>
-			Hello World!
-			<CheckboxList pollUrl='nLcnWaJmxAw' />
-		</div>
-	)
+function App() {
+    return (
+        <div className='App'>
+            <Routes />
+        </div>
+    )
 }
 
 export default App

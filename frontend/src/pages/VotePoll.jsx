@@ -1,13 +1,18 @@
 import React, { useState, useEffect } from 'react'
+import { useHistory } from 'react-router-dom'
 
-import Checkbox from './Checkbox'
+import Checkbox from '../components/Checkbox'
 
 import api from '../services/api'
 
-function CheckboxList({ pollUrl }) {
+function VotePoll(props) {
+    const { pollUrl } = props.match.params
+
     const [question, setQuestion] = useState('')
     const [options, setOptions] = useState([])
     const [multiple, setMultiple] = useState(false)
+
+    const history = useHistory()
 
     useEffect(() => {
         api.get(`poll/${pollUrl}`)
@@ -33,7 +38,6 @@ function CheckboxList({ pollUrl }) {
         }
 
         clickedOption.isVoted = event.target.checked
-
         setOptions(updatedOptions)
     }
 
@@ -43,19 +47,21 @@ function CheckboxList({ pollUrl }) {
         }
 
         api.post(`vote/${pollUrl}`, body)
-            .then(response => console.log(response))
+            .then(() => {
+                history.push(`/results/${pollUrl}`)
+            })
             .catch(error => console.log(error))
     }
 
     return (
-        <div className='checkboxListContainer'>
+        <div className='votePollContainer'>
             <legend>{question}</legend>
-            {options.map((option, i) => (
-                <Checkbox index={i} voteHandler={handleCheck} {...option} />
-            ))}
+            {options.map(
+                (option, i) => <Checkbox key={i} index={i} voteHandler={handleCheck} {...option} />
+            )}
             <button onClick={handleSubmition}>Submit</button>
         </div>
     )
 }
 
-export default CheckboxList
+export default VotePoll
