@@ -2,10 +2,14 @@ from secrets import token_urlsafe
 
 from pymongo.database import Collection, Database
 
-from ..models import Poll, PollInDB
+from ..models import Poll, PollInDB, PollCreation
 
 
-def create(db: Database, poll: Poll) -> str:
+def create(db: Database, poll: PollCreation) -> str:
+    poll.options = [
+        {'text': option, 'votes': 0} for option in poll.options
+    ]
+
     new_poll = PollInDB.parse_obj(poll)
     new_poll.url = token_urlsafe(nbytes=8)
 

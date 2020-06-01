@@ -8,7 +8,7 @@ from starlette.status import (
 
 from ..crud import crud_polls
 from ..database.setup import get_db
-from ..models import Poll, PollUrlPayload
+from ..models import Poll, PollCreation, PollUrlPayload
 
 router = APIRouter()
 
@@ -18,7 +18,7 @@ router = APIRouter()
     status_code=HTTP_201_CREATED,
     response_model=PollUrlPayload
 )
-def new_poll(poll: Poll, database: Database = Depends(get_db)):
+def new_poll(poll: PollCreation, database: Database = Depends(get_db)):
     poll_url = crud_polls.create(database, poll)
     return {'url': str(poll_url)}
 

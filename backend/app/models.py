@@ -14,6 +14,10 @@ class Poll(BaseModel):
     allow_multiple: bool
 
 
+class PollCreation(Poll):
+    options: List[str]
+
+
 class PollInDB(Poll):
     url: str = None
 
