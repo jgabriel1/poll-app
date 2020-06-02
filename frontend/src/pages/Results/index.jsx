@@ -31,20 +31,31 @@ function Results(props) {
     return (
         <div className='resultsContainer'>
             <p className='pollQuestion'>{question}</p>
-            <ul className='optionsList'>
-                {results.map((result, index) => {
-                    let { text, votes } = result
-                    let percent = 100 * (votes / total)
+            <table className='optionsList table table-striped'>
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col"></th>
+                        <th scope="col">Votes</th>
+                        <th scope="col">%</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {results.map((result, index) => {
+                        let { text, votes } = result
+                        let percent = 100 * (votes / total)
 
-                    return (
-                        <li className='optionContainer' key={index}>
-                            <div className='optionText'>{text}</div>
-                            <div className='optionVotes'>{votes}</div>
-                            <div className='optionPercent'>{`${percent.toFixed(2)}%`}</div>
-                        </li>
-                    )
-                })}
-            </ul>
+                        return (
+                            <tr className='optionContainer' key={index}>
+                                <th scope='row'>{index + 1}</th>
+                                <td className='optionText'>{text}</td>
+                                <td className='optionVotes'>{votes}</td>
+                                <td className='optionPercent'>{`${percent.toFixed(2)}%`}</td>
+                            </tr>
+                        )
+                    })}
+                </tbody>
+            </table>
         </div>
     )
 }

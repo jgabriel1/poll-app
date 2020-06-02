@@ -58,10 +58,21 @@ function VotePoll(props) {
     return (
         <div className='votePollContainer'>
             <legend>{question}</legend>
-            {options.map(
-                (option, i) => <Checkbox key={i} index={i} voteHandler={handleCheck} {...option} />
-            )}
-            <button onClick={handleSubmition}>Submit</button>
+            <div className='optionsContainer'>
+                {options.map(
+                    (option, i) => (
+                        <Checkbox
+                            key={i}
+                            index={i}
+                            voteHandler={handleCheck}
+                            {...option}
+                        />
+                    )
+                )}
+            </div>
+            <div className="buttonContainer">
+                <button className='btn btn-primary' onClick={handleSubmition}>Submit</button>
+            </div>
         </div>
     )
 }

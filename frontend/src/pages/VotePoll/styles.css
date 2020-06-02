@@ -1,0 +1,34 @@
+.votePollContainer {
+    width: 50%;
+    margin: auto;
+    font-size: larger;
+    margin-top: 40px;
+}
+
+legend {
+    margin-bottom: 20px;
+}
+
+.optionsContainer {
+    width: 90%;
+    margin: auto;
+}
+
+.checkBoxContainer {
+    width: 100%;
+}
+
+.custom-control-label::before,
+.custom-control-label::after {
+    width: 1.33rem;
+    height: 1.33rem;
+    margin-right: 16px;
+}
+
+.custom-control-label {
+    padding-left: 20px;
+}
+
+.buttonContainer {
+    text-align: right;
+}
