@@ -1,0 +1,32 @@
+.pollFormContainer {
+    width: 75%;
+    margin: auto;
+    font-size: larger;
+    margin-top: 40px;
+}
+
+label[for="question"] {
+    margin-right: 20px;
+}
+
+#question {
+    width: 100%;
+}
+
+.buttonsContainer {
+    display: flex;
+    justify-content: space-between;
+}
+
+.allowMultipleContainer {
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+    font-size: medium;
+}
+
+#allowMultiple {
+    margin-right: 10px;
+    margin-bottom: 10px;
+    width: 20px;
+}

@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 
-import Checkbox from '../components/Checkbox'
+import Checkbox from './components/Checkbox'
 
-import api from '../services/api'
+import api from '../../services/api'
+
+import './styles.css'
 
 function VotePoll(props) {
     const { pollUrl } = props.match.params
