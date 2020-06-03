@@ -1,7 +1,6 @@
 .pollFormContainer {
     width: 50%;
     margin: auto;
-    font-size: larger;
     margin-top: 40px;
 }
 
@@ -9,24 +8,28 @@ label[for="question"] {
     margin-right: 20px;
 }
 
-#question {
-    width: 100%;
+.questionContainer {
+    font-size: x-large;
 }
 
-.buttonsContainer {
-    display: flex;
-    justify-content: space-between;
+#question {
+    width: 100%;
 }
 
 .allowMultipleContainer {
     display: flex;
     align-items: center;
     margin: 10px 0;
-    font-size: medium;
+    font-size: large;
 }
 
 #allowMultiple {
     margin-right: 10px;
     margin-bottom: 10px;
     width: 20px;
+}
+
+.buttonsContainer {
+    display: flex;
+    justify-content: space-between;
 }
