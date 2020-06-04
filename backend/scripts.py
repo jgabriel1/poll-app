@@ -8,7 +8,7 @@ def start():
     uvicorn.run('app:app', use_colors=False, port=8000)
 
 
-def reload():
+def dev():
     print('INFO:     Starting Server... [Debug Mode]')
     check_call(['uvicorn', 'app:app', '--reload', '--no-use-colors'])
 

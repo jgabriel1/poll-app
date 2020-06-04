@@ -10,8 +10,11 @@ router = APIRouter()
 
 
 @router.post('/vote/{poll_url}', status_code=HTTP_204_NO_CONTENT)
-def compute_votes(
-        poll_url: str, votes: Votes, database: Database = Depends(get_db)):
+def update(
+        poll_url: str,
+        votes: Votes,
+        database: Database = Depends(get_db)
+):
     updated: bool = crud_votes.compute(database, poll_url, votes.voted)
 
     if not updated:

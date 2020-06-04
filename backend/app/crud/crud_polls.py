@@ -1,16 +1,13 @@
 from secrets import token_urlsafe
+from typing import Optional
 
 from pymongo.database import Collection, Database
 
-from ..models import Poll, PollInDB, PollCreation
+from ..models import Poll, PollFromRequest, PollInDB
 
 
-def create(db: Database, poll: PollCreation) -> str:
-    poll.options = [
-        {'text': option, 'votes': 0} for option in poll.options
-    ]
-
-    new_poll = PollInDB.parse_obj(poll)
+def create(db: Database, poll: PollFromRequest) -> str:
+    new_poll = PollInDB.serialize_from_request(poll)
     new_poll.url = token_urlsafe(nbytes=8)
 
     polls: Collection = db.polls
@@ -18,12 +15,14 @@ def create(db: Database, poll: PollCreation) -> str:
     return new_poll.url
 
 
-def find_by_url(db: Database, poll_url: str) -> Poll:
+def find_by_url(db: Database, poll_url: str) -> Optional[Poll]:
     polls: Collection = db.polls
     poll = polls.find_one({'url': poll_url})
-    return Poll.parse_obj(poll)
+
+    if poll is not None:
+        return Poll.parse_obj(poll)
 
 
 def delete(db: Database, poll_url: str) -> None:
     polls: Collection = db.polls
-    polls.delete_one({'url': poll_url})
+    polls.find_one_and_delete({'url': poll_url})

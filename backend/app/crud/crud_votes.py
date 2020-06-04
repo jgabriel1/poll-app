@@ -13,11 +13,9 @@ def compute(db: Database, poll_url: str, votes: List[bool]) -> bool:
     multiple_voted: bool = sum(votes) > 1
 
     # Check if it allows multiple votes only when recieving multiple votes:
-    filters: dict = {
-        'url': poll_url, 'allow_multiple': True
-    } if multiple_voted else {
-        'url': poll_url
-    }
+    filters: dict = {'url': poll_url}
+    if multiple_voted:
+        filters.update({'allow_multiple': True})
 
     polls: Collection = db.polls
     result: UpdateResult = polls.update_one(filters, {'$inc': update_votes})

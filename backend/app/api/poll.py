@@ -8,7 +8,7 @@ from starlette.status import (
 
 from ..crud import crud_polls
 from ..database.setup import get_db
-from ..models import Poll, PollCreation, PollUrlPayload
+from ..models import Poll, PollFromRequest, PollUrlPayload
 
 router = APIRouter()
 
@@ -18,13 +18,13 @@ router = APIRouter()
     status_code=HTTP_201_CREATED,
     response_model=PollUrlPayload
 )
-def new_poll(poll: PollCreation, database: Database = Depends(get_db)):
+def create(poll: PollFromRequest, database: Database = Depends(get_db)):
     poll_url = crud_polls.create(database, poll)
     return {'url': str(poll_url)}
 
 
 @router.get('/poll/{poll_url}', response_model=Poll)
-def fetch_poll(poll_url: str, database: Database = Depends(get_db)):
+def show(poll_url: str, database: Database = Depends(get_db)):
     poll = crud_polls.find_by_url(database, poll_url)
 
     if not poll:
@@ -36,6 +36,6 @@ def fetch_poll(poll_url: str, database: Database = Depends(get_db)):
 
 
 @router.delete('/poll/{poll_url}', status_code=HTTP_204_NO_CONTENT)
-def delete_poll(poll_url: str, database: Database = Depends(get_db)):
+def destroy(poll_url: str, database: Database = Depends(get_db)):
     crud_polls.delete(database, poll_url)
     return Response(status_code=HTTP_204_NO_CONTENT)

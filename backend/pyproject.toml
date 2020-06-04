@@ -19,7 +19,7 @@ flake8 = "^3.8.2"
 
 [tool.poetry.scripts]
 start = "scripts:start"
-reload = "scripts:reload"
+dev = "scripts:dev"
 test = "scripts:test"
 
 [build-system]
