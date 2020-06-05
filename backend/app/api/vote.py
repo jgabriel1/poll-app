@@ -4,7 +4,7 @@ from starlette.status import HTTP_204_NO_CONTENT, HTTP_406_NOT_ACCEPTABLE
 
 from ..crud import crud_votes
 from ..database.setup import get_db
-from ..models import Votes
+from ..models.payload import Votes
 
 router = APIRouter()
 
@@ -15,9 +15,9 @@ def update(
         votes: Votes,
         database: Database = Depends(get_db)
 ):
-    updated: bool = crud_votes.compute(database, poll_url, votes.voted)
+    computed: bool = crud_votes.compute(database, poll_url, votes.voted)
 
-    if not updated:
+    if not computed:
         raise HTTPException(
             HTTP_406_NOT_ACCEPTABLE, detail='Cannot vote for multiple options!'
         )

@@ -3,12 +3,12 @@ from typing import Optional
 
 from pymongo.database import Collection, Database
 
-from ..models import Poll, PollFromRequest, PollInDB
+from ..models.poll import Poll, PollFromRequest, PollInDB
 
 
 def create(db: Database, poll: PollFromRequest) -> str:
-    new_poll = PollInDB.serialize_from_request(poll)
-    new_poll.url = token_urlsafe(nbytes=8)
+    url = token_urlsafe(nbytes=8)
+    new_poll = PollInDB.serialize_from_request(poll, url)
 
     polls: Collection = db.polls
     polls.insert_one(new_poll.dict())

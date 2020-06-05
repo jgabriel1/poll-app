@@ -8,7 +8,8 @@ from starlette.status import (
 
 from ..crud import crud_polls
 from ..database.setup import get_db
-from ..models import Poll, PollFromRequest, PollUrlPayload
+from ..models.payload import PollUrlPayload
+from ..models.poll import Poll, PollFromRequest
 
 router = APIRouter()
 
