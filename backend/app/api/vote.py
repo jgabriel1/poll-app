@@ -1,9 +1,13 @@
 from fastapi import APIRouter, Depends, Response, HTTPException
-from pymongo.database import Database
-from starlette.status import HTTP_204_NO_CONTENT, HTTP_406_NOT_ACCEPTABLE
+from pymongo import MongoClient
+from starlette.status import (
+    HTTP_204_NO_CONTENT,
+    HTTP_404_NOT_FOUND,
+    HTTP_406_NOT_ACCEPTABLE
+)
 
 from ..crud import crud_votes
-from ..database.setup import get_db
+from ..database.setup import get_client
 from ..models.payload import Votes
 
 router = APIRouter()
@@ -13,9 +17,14 @@ router = APIRouter()
 def update(
         poll_url: str,
         votes: Votes,
-        database: Database = Depends(get_db)
+        client: MongoClient = Depends(get_client)
 ):
-    computed: bool = crud_votes.compute(database, poll_url, votes.voted)
+    computed = crud_votes.compute(client, poll_url, votes.voted)
+
+    if computed is None:
+        raise HTTPException(
+            HTTP_404_NOT_FOUND, detail='This poll does not exist.'
+        )
 
     if not computed:
         raise HTTPException(
