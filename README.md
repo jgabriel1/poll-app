@@ -7,7 +7,7 @@ It's a simple web application for creating and voting in polls:
 * the creator can share that url with the people they wish to inquire;
 * upon finishing voting, the voter will be able to see the results of the poll.
 
-## Technoligies used on the project:
+## Technologies used on the project:
 
 * ### **Frontend:** JavaScript on NodeJS with server side rendering using [ReactJS](https://reactjs.org/) framework;
 

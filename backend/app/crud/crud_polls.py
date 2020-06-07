@@ -1,28 +1,33 @@
 from secrets import token_urlsafe
 from typing import Optional
 
-from pymongo.database import Collection, Database
+from pymongo.client_session import ClientSession
+from pymongo.database import Collection
 
-from ..models.poll import Poll, PollFromRequest, PollInDB
+from ..database.collections import get_polls_collection
+from ..models.poll import PollFromRequest, PollInDB
 
 
-def create(db: Database, poll: PollFromRequest) -> str:
-    url = token_urlsafe(nbytes=8)
+def create(poll: PollFromRequest, session: ClientSession) -> str:
+    url: str = token_urlsafe(nbytes=8)
     new_poll = PollInDB.serialize_from_request(poll, url)
 
-    polls: Collection = db.polls
-    polls.insert_one(new_poll.dict())
+    polls: Collection = get_polls_collection(session)
+
+    polls.insert_one(new_poll.dict(), session=session)
     return new_poll.url
 
 
-def find_by_url(db: Database, poll_url: str) -> Optional[Poll]:
-    polls: Collection = db.polls
-    poll = polls.find_one({'url': poll_url})
+def find_by_url(poll_url: str, session: ClientSession) -> Optional[PollInDB]:
+    polls: Collection = get_polls_collection(session)
+
+    poll = polls.find_one({'url': poll_url}, session=session)
 
     if poll is not None:
-        return Poll.parse_obj(poll)
+        return PollInDB.parse_obj(poll)
 
 
-def delete(db: Database, poll_url: str) -> None:
-    polls: Collection = db.polls
-    polls.find_one_and_delete({'url': poll_url})
+def delete(poll_url: str, session: ClientSession) -> None:
+    polls: Collection = get_polls_collection(session)
+
+    polls.find_one_and_delete({'url': poll_url}, session=session)

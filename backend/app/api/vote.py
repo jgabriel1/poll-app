@@ -1,13 +1,13 @@
-from fastapi import APIRouter, Depends, Response, HTTPException
-from pymongo import MongoClient
+from fastapi import APIRouter, Depends, HTTPException, Response
+from pymongo.client_session import ClientSession
 from starlette.status import (
     HTTP_204_NO_CONTENT,
     HTTP_404_NOT_FOUND,
     HTTP_406_NOT_ACCEPTABLE
 )
 
-from ..crud import crud_votes
-from ..database.setup import get_client
+from ..crud import crud_polls, crud_votes
+from ..database.connection import get_db
 from ..models.payload import Votes
 
 router = APIRouter()
@@ -17,18 +17,24 @@ router = APIRouter()
 def update(
         poll_url: str,
         votes: Votes,
-        client: MongoClient = Depends(get_client)
+        session: ClientSession = Depends(get_db)
 ):
-    computed = crud_votes.compute(client, poll_url, votes.voted)
+    with session.start_transaction():
+        poll = crud_polls.find_by_url(poll_url, session)
 
-    if computed is None:
-        raise HTTPException(
-            HTTP_404_NOT_FOUND, detail='This poll does not exist.'
-        )
+        if poll is None:
+            raise HTTPException(
+                HTTP_404_NOT_FOUND,
+                detail='This poll does not exist.'
+            )
 
-    if not computed:
-        raise HTTPException(
-            HTTP_406_NOT_ACCEPTABLE, detail='Cannot vote for multiple options!'
-        )
+        multiple_voted: bool = sum(votes.voted) > 1
+        if multiple_voted and not poll.allow_multiple:
+            raise HTTPException(
+                HTTP_406_NOT_ACCEPTABLE,
+                detail='Cannot vote for multiple options!'
+            )
+
+        crud_votes.compute(poll, votes.voted, session)
 
     return Response(status_code=HTTP_204_NO_CONTENT)
