@@ -12,10 +12,11 @@ pymongo = {extras = ["tls"], version = "^3.10.1"}
 dnspython = "^1.16.0"
 
 [tool.poetry.dev-dependencies]
-pytest = "^5.2"
 autopep8 = "^1.5.2"
 python-dotenv = "^0.13.0"
 flake8 = "^3.8.2"
+requests = "^2.23.0"
+pytest = "^5.4.3"
 
 [tool.poetry.scripts]
 start = "scripts:start"
